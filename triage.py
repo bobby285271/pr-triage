@@ -68,6 +68,7 @@ def scan_issues(config):
     conflicts = defaultdict(list)
     merges = defaultdict(list)
     multi_author = defaultdict(list)
+    approvals = defaultdict(list)
 
     g = Github(get_token())
 
@@ -166,6 +167,23 @@ def scan_issues(config):
             if len(authors) > 1:
                 multi_author[login].append(pull)
 
+            while 1:
+                try:
+                    review_list = list(pull.get_reviews())
+                except Exception as e:
+                    print('ERROR: %s' % e)
+                    print('SLEEP')
+                    time.sleep(5)
+                else:
+                    break
+
+            approval_cnt = 0
+            for review in review_list:
+                if review.state == "APPROVED":
+                    approval_cnt += 1
+                    
+            approvals[f"Approvals: {approval_cnt}"].append(pull)
+
             counter += 1
             if counter >= 500:
                 break
@@ -175,10 +193,10 @@ def scan_issues(config):
                               key=lambda t: len(t[-1]), reverse=True):
         usersbypulls[user] = pulls
 
-    return (config, files, usersbypulls, merges, conflicts, multi_author)
+    return (config, files, usersbypulls, merges, conflicts, multi_author, approvals)
 
 
-def write_html(config, files, users, merges, conflicts, multi_author):
+def write_html(config, files, users, merges, conflicts, multi_author, approvals):
 
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     loader = jinja2.FileSystemLoader('templates')
@@ -188,7 +206,7 @@ def write_html(config, files, users, merges, conflicts, multi_author):
         os.makedirs('docs')
 
     templates = ['index', 'byfile', 'byuser', 'bymergecommits',
-                 'byconflict', 'bymultiauthor']
+                 'byconflict', 'bymultiauthor', 'byapproval']
 
     for tmplfile in templates:
         now = datetime.utcnow()
@@ -200,6 +218,7 @@ def write_html(config, files, users, merges, conflicts, multi_author):
         rendered = template.render(files=files, users=users, merges=merges,
                                    conflicts=conflicts,
                                    multi_author=multi_author,
+                                   approvals=approvals,
                                    title=config['title'],
                                    now=now, **classes)
 
