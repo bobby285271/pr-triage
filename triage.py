@@ -16,7 +16,6 @@
 #    under the License.
 
 import os
-import re
 import sys
 import time
 import yaml
@@ -64,8 +63,6 @@ def ensure_rate_limit(g):
 
 
 def scan_issues(config):
-    merge_commit = re.compile("Merge branch \S+ into ", flags=re.I)
-
     files = defaultdict(list)
     users = defaultdict(list)
     conflicts = defaultdict(list)
@@ -153,10 +150,13 @@ def scan_issues(config):
                     time.sleep(5)
                 else:
                     break
+
             for commit in commit_list:
                 authors.add(commit.commit.author.email)
+            
+            for commit in commit_list:
                 try:
-                    if merge_commit.match(commit.commit.message):
+                    if len(commit.commit.parents) > 1:
                         merges[login].append(pull)
                         break
                 except TypeError:
