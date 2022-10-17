@@ -175,12 +175,17 @@ def scan_issues(config):
                 else:
                     break
 
-            approval_cnt = 0
+            approvers = dict()
             for review in review_list:
                 if review.state == "APPROVED":
-                    approval_cnt += 1
+                    approvers[review.user] = review
+                else:
+                    try:
+                        del approvers[review.user]
+                    except KeyError:
+                        pass
 
-            approvals[f"Approvals: {approval_cnt}"].append(pull)
+            approvals[f"Approvals: {len(approvers)}"].append(pull)
 
             counter += 1
             if counter >= 500:
