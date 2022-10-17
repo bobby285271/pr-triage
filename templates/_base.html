@@ -4,7 +4,6 @@
 		<meta charset="utf-8">
 		<title>{% block title %}{{ title }}{% endblock %}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 		<style>
 			body {padding-top: 70px;}
 			.jumbotron {
@@ -20,7 +19,6 @@
 			}
 {% block extracss %}{% endblock %}
 		</style>
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 	</head>
 	<body>
 		<div class="navbar navbar-inverse navbar-fixed-top">
@@ -67,12 +65,6 @@
 		<div class="container">
 {% block body %}{% endblock %}
 		</div>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-		<script>
-			var pulls = $(".pull")
-			$("#count").html("&nbsp;&nbsp;(" + pulls.length + ")").addClass('text-muted');
-		</script>
 {% block extrajs %}{% endblock %}
 	</body>
 </html>
