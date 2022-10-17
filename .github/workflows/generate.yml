@@ -4,6 +4,12 @@ on:
       - master
       - mvp
   workflow_dispatch:
+  schedule:
+    - cron: 41 3 * * *
+    - cron: 23 7 * * *
+    - cron: 7 13 * * *
+    - cron: 11 17 * * *
+    - cron: 37 23 * * *
 
 permissions:
   contents: read
