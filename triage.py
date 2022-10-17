@@ -116,7 +116,6 @@ def scan_issues(config):
             while 1:
                 try:
                     mergeable = pull.mergeable
-                    mergeable_state = pull.mergeable_state
                 except Exception as e:
                     print('ERROR: %s' % e)
                     print('SLEEP')
