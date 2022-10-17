@@ -93,14 +93,19 @@ def scan_issues(config):
 
         while 1:
             try:
-                pull_list = list(repo.get_pulls())
+                pull_list = list(repo.get_pulls(state='open', sort='updated', direction='desc'))
             except Exception as e:
                 print('ERROR: %s' % e)
                 print('SLEEP')
                 time.sleep(5)
             else:
                 break
+        
+        counter = 0
         for pull in pull_list:
+            counter += 1
+            if counter > 500:
+                break
             print(pull)
             ensure_rate_limit(g)
             if pull.user is None:
