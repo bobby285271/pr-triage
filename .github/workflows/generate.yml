@@ -1,8 +1,4 @@
 on:
-  push:
-    branches:
-      - master
-      - mvp
   workflow_dispatch:
   schedule:
     - cron: 41 3 * * *
