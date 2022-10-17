@@ -108,7 +108,11 @@ def scan_issues(config):
 
         counter = 0
         for pull in pull_list:
-            print(pull)
+
+            # No staging-next PRs
+            if pull.head.repo.owner.login == "NixOS" and pull.head.ref.startswith("staging-next"):
+                continue
+
             ensure_rate_limit(g)
             if pull.user is None:
                 login = pull.head.user.login
