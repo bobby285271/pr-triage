@@ -69,7 +69,6 @@ def scan_issues(config):
     files = defaultdict(list)
     users = defaultdict(list)
     conflicts = defaultdict(list)
-    ci_failures = defaultdict(list)
     merges = defaultdict(list)
     multi_author = defaultdict(list)
 
@@ -131,11 +130,9 @@ def scan_issues(config):
                     time.sleep(5)
                 else:
                     break
-            if mergeable is False or mergeable_state == 'dirty':
+            if mergeable is False:
                 conflicts[login].append(pull)
 
-            if mergeable_state == 'unstable':
-                ci_failures[login].append(pull)
 
             while 1:
                 try:
@@ -180,12 +177,10 @@ def scan_issues(config):
                               key=lambda t: len(t[-1]), reverse=True):
         usersbypulls[user] = pulls
 
-    return (config, files, usersbypulls, merges, conflicts, multi_author,
-            ci_failures)
+    return (config, files, usersbypulls, merges, conflicts, multi_author)
 
 
-def write_html(config, files, users, merges, conflicts, multi_author,
-               ci_failures):
+def write_html(config, files, users, merges, conflicts, multi_author):
 
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     loader = jinja2.FileSystemLoader('templates')
@@ -195,7 +190,7 @@ def write_html(config, files, users, merges, conflicts, multi_author,
         os.makedirs('docs')
 
     templates = ['index', 'byfile', 'byuser', 'bymergecommits',
-                 'byconflict', 'bymultiauthor', 'bycifailures']
+                 'byconflict', 'bymultiauthor']
 
     for tmplfile in templates:
         now = datetime.utcnow()
@@ -207,7 +202,6 @@ def write_html(config, files, users, merges, conflicts, multi_author,
         rendered = template.render(files=files, users=users, merges=merges,
                                    conflicts=conflicts,
                                    multi_author=multi_author,
-                                   ci_failures=ci_failures,
                                    title=config['title'],
                                    now=now, **classes)
 
