@@ -93,14 +93,15 @@ def scan_issues(config):
 
         while 1:
             try:
-                pull_list = list(repo.get_pulls(state='open', sort='updated', direction='desc'))
+                pull_list = list(repo.get_pulls(
+                    state='open', sort='updated', direction='desc'))
             except Exception as e:
                 print('ERROR: %s' % e)
                 print('SLEEP')
                 time.sleep(5)
             else:
                 break
-        
+
         counter = 0
         for pull in pull_list:
             print(pull)
@@ -161,7 +162,7 @@ def scan_issues(config):
 
             if len(authors) > 1:
                 multi_author[login].append(pull)
-            
+
             counter += 1
             if counter >= 500:
                 break
@@ -204,11 +205,6 @@ def write_html(config, files, users, merges, conflicts, multi_author,
 
         with open('htmlout/%s.html' % tmplfile, 'w+b') as f:
             f.write(rendered.encode('ascii', 'ignore'))
-
-        if config.get('use_rackspace', False):
-            cont.upload_file('htmlout/%s.html' % tmplfile,
-                             obj_name='%s.html' % tmplfile,
-                             content_type='text/html')
 
 
 if __name__ == '__main__':
