@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 {% block title %}By File - {{ super() }}{% endblock %}
 {% block body %}
-<h1>Pull requests by File</h1>
+<h1>Pull Requests by File</h1>
 {% if files %}
 <ul>
 	{% for filename, pulls in files|dictsort %}

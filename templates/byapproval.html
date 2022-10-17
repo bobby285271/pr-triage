@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 {% block title %}By Approval - {{ super() }}{% endblock %}
 {% block body %}
-<h1>Pull requests by Approval</h1>
+<h1>Pull Requests by Approval</h1>
 {% if files %}
 <ul>
     {% for ackcnt, pulls in approvals|dictsort %}
