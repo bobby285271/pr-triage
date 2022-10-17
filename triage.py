@@ -107,11 +107,6 @@ def scan_issues(config):
 
         counter = 0
         for pull in pull_list:
-
-            # No staging-next PRs
-            if pull.head.repo.owner.login == "NixOS" and pull.head.ref.startswith("staging-next"):
-                continue
-
             ensure_rate_limit(g)
             if pull.user is None:
                 login = pull.head.user.login
@@ -133,7 +128,6 @@ def scan_issues(config):
             if mergeable is False:
                 conflicts[login].append(pull)
 
-
             while 1:
                 try:
                     file_list = list(pull.get_files())
@@ -143,8 +137,11 @@ def scan_issues(config):
                     time.sleep(5)
                 else:
                     break
-            for pull_file in file_list:
-                files[pull_file.filename].append(pull)
+            if len(file_list) >= 10:
+                files['* - Touches more than 10 files'].append(pull)
+            else:
+                for pull_file in file_list:
+                    files[pull_file.filename].append(pull)
 
             authors = set()
             while 1:
