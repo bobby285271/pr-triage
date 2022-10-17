@@ -203,7 +203,7 @@ def write_html(config, files, users, merges, conflicts, multi_authors, approvals
     if not os.path.isdir('docs'):
         os.makedirs('docs')
 
-    templates = ['index', 'byfile', 'byuser', 'bymergecommits',
+    templates = ['index', 'byfile', 'byuser', 'bymergecommit',
                  'byconflict', 'bymultiauthor', 'byapproval']
 
     for tmplfile in templates:
