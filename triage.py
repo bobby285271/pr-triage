@@ -103,9 +103,6 @@ def scan_issues(config):
         
         counter = 0
         for pull in pull_list:
-            counter += 1
-            if counter > 500:
-                break
             print(pull)
             ensure_rate_limit(g)
             if pull.user is None:
@@ -164,6 +161,10 @@ def scan_issues(config):
 
             if len(authors) > 1:
                 multi_author[login].append(pull)
+            
+            counter += 1
+            if counter >= 500:
+                break
 
     usersbypulls = OrderedDict()
     for user, pulls in sorted(users.items(),
