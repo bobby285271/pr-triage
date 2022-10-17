@@ -27,6 +27,16 @@ from datetime import datetime
 from collections import defaultdict, OrderedDict
 
 
+def get_token():
+    token = os.getenv("TOKEN_GITHUB")
+    if not token:
+        token = os.getenv("GITHUB_TOKEN")
+    if not token:
+        print("Missing GitHub token")
+        sys.exit(1)
+    return token
+
+
 def get_config():
     config_files = [
         './triage.yaml',
@@ -63,7 +73,7 @@ def scan_issues(config):
     merges = defaultdict(list)
     multi_author = defaultdict(list)
 
-    g = Github(config['github_token'])
+    g = Github(get_token())
 
     if not isinstance(config['github_repository'], list):
         repos = [config['github_repository']]

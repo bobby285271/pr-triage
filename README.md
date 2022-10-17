@@ -26,7 +26,6 @@ This file can live at `./triage.yaml`, `~/.triage.yaml`, or `/etc/triage.yaml`
 ---
 # Required Configuration
 title: My PR Triage
-github_token: ghp_xxx
 github_repository:
   - 'ansible/ansible'
 ```
