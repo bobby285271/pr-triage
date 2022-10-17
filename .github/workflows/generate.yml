@@ -1,0 +1,25 @@
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - run: pip install -r requirements.txt
+      - run: python3 triage.py
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Upload generated results"
+          file_pattern: "docs/*.html"
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
+          commit_author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+          push_options: --force
+          branch: generated
