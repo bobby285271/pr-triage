@@ -154,7 +154,7 @@ def scan_issues(config):
 
             for commit in commit_list:
                 authors.add(commit.commit.author.email)
-            
+
             for commit in commit_list:
                 try:
                     if len(commit.commit.parents) > 1:
