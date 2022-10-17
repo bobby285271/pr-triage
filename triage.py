@@ -26,12 +26,6 @@ from github import Github
 from datetime import datetime
 from collections import defaultdict, OrderedDict
 
-try:
-    import pyrax
-    HAS_PYRAX = True
-except ImportError:
-    HAS_PYRAX = False
-
 
 def get_config():
     config_files = [
