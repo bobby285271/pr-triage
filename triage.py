@@ -67,7 +67,7 @@ def scan_issues(config):
     users = defaultdict(list)
     conflicts = defaultdict(list)
     merges = defaultdict(list)
-    multi_author = defaultdict(list)
+    multi_authors = defaultdict(list)
     approvals = defaultdict(list)
 
     g = Github(get_token())
@@ -164,7 +164,7 @@ def scan_issues(config):
                     pass
 
             if len(authors) > 1:
-                multi_author[login].append(pull)
+                multi_authors[login].append(pull)
 
             while 1:
                 try:
@@ -180,7 +180,7 @@ def scan_issues(config):
             for review in review_list:
                 if review.state == "APPROVED":
                     approval_cnt += 1
-                    
+
             approvals[f"Approvals: {approval_cnt}"].append(pull)
 
             counter += 1
@@ -192,10 +192,10 @@ def scan_issues(config):
                               key=lambda t: len(t[-1]), reverse=True):
         usersbypulls[user] = pulls
 
-    return (config, files, usersbypulls, merges, conflicts, multi_author, approvals)
+    return (config, files, usersbypulls, merges, conflicts, multi_authors, approvals)
 
 
-def write_html(config, files, users, merges, conflicts, multi_author, approvals):
+def write_html(config, files, users, merges, conflicts, multi_authors, approvals):
 
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     loader = jinja2.FileSystemLoader('templates')
@@ -216,7 +216,7 @@ def write_html(config, files, users, merges, conflicts, multi_author, approvals)
         template = environment.get_template('%s.html' % tmplfile)
         rendered = template.render(files=files, users=users, merges=merges,
                                    conflicts=conflicts,
-                                   multi_author=multi_author,
+                                   multi_authors=multi_authors,
                                    approvals=approvals,
                                    title=config['title'],
                                    now=now, **classes)

@@ -2,9 +2,9 @@
 {% block title %}By Multiple Authors - {{ super() }}{% endblock %}
 {% block body %}
 <h1>Pull Requests with Multiple Authors</h1>
-{% if multi_author %}
+{% if multi_authors %}
 <ul>
-	{% for user, pulls in multi_author|dictsort %}
+	{% for user, pulls in multi_authors|dictsort %}
 	<li id="{{ user }}"><strong><a href="https://github.com/{{ user }}">{{ user }}</a></strong>&nbsp;<span>({{
 			pulls|length }})</span>
 		<ul>
