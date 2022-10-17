@@ -161,7 +161,7 @@ def scan_issues(config):
             approvals[f"Approvals: {len(approvers)}"].append(pull)
 
             counter += 1
-            if counter >= 500:
+            if counter >= 800:
                 break
 
     usersbypulls = OrderedDict()
