@@ -42,7 +42,7 @@ def get_config():
     for config_file in config_files:
         try:
             with open(os.path.realpath(config_file)) as f:
-                config = yaml.load(f)
+                config = yaml.load(f, Loader=yaml.SafeLoader)
         except:
             pass
         else:
