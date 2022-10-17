@@ -69,9 +69,7 @@ def scan_issues(config):
     merges = defaultdict(list)
     multi_author = defaultdict(list)
 
-    g = Github(client_id=config['github_client_id'],
-               client_secret=config['github_client_secret'],
-               per_page=100)
+    g = Github(config['github_token'])
 
     if not isinstance(config['github_repository'], list):
         repos = [config['github_repository']]
