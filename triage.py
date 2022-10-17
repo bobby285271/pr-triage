@@ -176,15 +176,6 @@ def scan_issues(config):
 
 def write_html(config, files, users, merges, conflicts, multi_author,
                ci_failures):
-    if config.get('use_rackspace', False):
-        if not HAS_PYRAX:
-            raise SystemExit('The pyrax python module is required to use '
-                             'Rackspace CloudFiles')
-        pyrax.set_setting('identity_type', 'rackspace')
-        credentials = os.path.expanduser(config['pyrax_credentials'])
-        pyrax.set_credential_file(credentials, region=config['pyrax_region'])
-        cf = pyrax.cloudfiles
-        cont = cf.get_container(config['pyrax_container'])
 
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     loader = jinja2.FileSystemLoader('templates')
