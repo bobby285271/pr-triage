@@ -177,8 +177,8 @@ def write_html(config, files, users, merges, conflicts, multi_author,
     loader = jinja2.FileSystemLoader('templates')
     environment = jinja2.Environment(loader=loader, trim_blocks=True)
 
-    if not os.path.isdir('htmlout'):
-        os.makedirs('htmlout')
+    if not os.path.isdir('docs'):
+        os.makedirs('docs')
 
     templates = ['index', 'byfile', 'byuser', 'bymergecommits',
                  'byconflict', 'bymultiauthor', 'bycifailures']
@@ -197,7 +197,7 @@ def write_html(config, files, users, merges, conflicts, multi_author,
                                    title=config['title'],
                                    now=now, **classes)
 
-        with open('htmlout/%s.html' % tmplfile, 'w+b') as f:
+        with open('docs/%s.html' % tmplfile, 'w+b') as f:
             f.write(rendered.encode('ascii', 'ignore'))
 
 

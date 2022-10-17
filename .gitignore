@@ -53,5 +53,4 @@ coverage.xml
 docs/_build/
 
 # Project stuff
-htmlout/
 triage.yaml
