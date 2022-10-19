@@ -64,8 +64,6 @@ def ensure_rate_limit(g):
 
 def scan_issues(config):
     files = defaultdict(list)
-    users = defaultdict(list)
-    conflicts = defaultdict(list)
     approvals = defaultdict(list)
 
     g = Github(get_token())
@@ -104,24 +102,6 @@ def scan_issues(config):
         counter = 0
         for pull in pull_list:
             ensure_rate_limit(g)
-            if pull.user is None:
-                login = pull.head.user.login
-            else:
-                login = pull.user.login
-
-            users[login].append(pull)
-
-            while 1:
-                try:
-                    mergeable = pull.mergeable
-                except Exception as e:
-                    print('ERROR: %s' % e)
-                    print('SLEEP')
-                    time.sleep(5)
-                else:
-                    break
-            if mergeable is False:
-                conflicts[login].append(pull)
 
             while 1:
                 try:
@@ -132,6 +112,7 @@ def scan_issues(config):
                     time.sleep(5)
                 else:
                     break
+
             if len(file_list) >= 10:
                 files['* - Touches more than 10 files'].append(pull)
             else:
@@ -164,16 +145,10 @@ def scan_issues(config):
             if counter >= 800:
                 break
 
-    usersbypulls = OrderedDict()
-    for user, pulls in sorted(users.items(),
-                              key=lambda t: len(t[-1]), reverse=True):
-        usersbypulls[user] = pulls
-
-    return (config, files, usersbypulls, conflicts, approvals)
+    return (config, files, approvals)
 
 
-def write_html(config, files, users, conflicts, approvals):
-
+def write_html(config, files, approvals):
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     loader = jinja2.FileSystemLoader('templates')
     environment = jinja2.Environment(loader=loader, trim_blocks=True)
@@ -181,7 +156,7 @@ def write_html(config, files, users, conflicts, approvals):
     if not os.path.isdir('docs'):
         os.makedirs('docs')
 
-    templates = ['index', 'byfile', 'byuser', 'byconflict', 'byapproval']
+    templates = ['index', 'byfile', 'byapproval']
 
     for tmplfile in templates:
         now = datetime.utcnow()
@@ -190,8 +165,7 @@ def write_html(config, files, users, conflicts, approvals):
             classes['%s_classes' % t] = 'active' if tmplfile == t else ''
 
         template = environment.get_template('%s.html' % tmplfile)
-        rendered = template.render(files=files, users=users,
-                                   conflicts=conflicts,
+        rendered = template.render(files=files,
                                    approvals=approvals,
                                    title=config['title'],
                                    now=now, **classes)
